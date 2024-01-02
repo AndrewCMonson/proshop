@@ -6,14 +6,17 @@ import { LinkContainer } from 'react-router-bootstrap';
 const Header = () => {
 	return (
 		<header>
-			<Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
+			<Navbar  variant="dark" expand="lg" collapseOnSelect className='navBar'>
 				<Container>
 					<LinkContainer to="/">
-						<Navbar.Brand>ProShop</Navbar.Brand>
+						<Navbar.Brand>PROShop</Navbar.Brand>
 					</LinkContainer>
 					<Navbar.Toggle aria-controls="basic-navbar-nav" />
 					<Navbar.Collapse id="basic-navbar-nav">
 						<Nav className="ms-auto">
+							<LinkContainer to='/categories'>
+								<Nav.Link>Categories</Nav.Link>
+							</LinkContainer>
 							<LinkContainer to="/cart">
 								<Nav.Link>
 									<FaShoppingCart /> Cart
