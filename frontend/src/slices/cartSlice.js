@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
-	cartItems: localStorage.getItem('cartItems')
-		? JSON.parse(localStorage.getItem('cartItems'))
-		: { cartItems: [] },
-};
+
+
+const initialState = localStorage.getItem('cart')
+  ? JSON.parse(localStorage.getItem('cart'))
+  : { cartItems: [], shippingAddress: {}, paymentMethod: 'PayPal' };
 
 const addDecimals = num => {
 	return (Math.round(num * 100) / 100).toFixed(2);
@@ -17,11 +17,11 @@ const cartSlice = createSlice({
 		addToCart: (state, action) => {
 			const item = action.payload;
 
-			const existingItem = state.cartItems.find(x => x._id === item._id);
+			const existItem = state.cartItems.find(x => x._id === item._id);
 
-			if (existingItem) {
+			if (existItem) {
 				state.cartItems = state.cartItems.map(x =>
-					x._id === existingItem._id ? item : x
+					x._id === existItem._id ? item : x
 				);
 			} else {
 				state.cartItems = [...state.cartItems, item];
@@ -44,7 +44,7 @@ const cartSlice = createSlice({
 				Number(state.taxPrice)
 			).toFixed(2);
 
-            localStorage.setItem('cartItems', JSON.stringify(state.cartItems));
+			localStorage.setItem('cartItems', JSON.stringify(state.cartItems));
 		},
 	},
 });
