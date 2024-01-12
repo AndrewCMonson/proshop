@@ -11,7 +11,7 @@ import {
 } from 'react-bootstrap';
 import { FaTrash } from 'react-icons/fa';
 import Message from '../components/Message';
-import { addToCart } from '../slices/cartSlice';
+import { addToCart, removeFromCart } from '../slices/cartSlice';
 
 const CartScreen = () => {
 	const navigate = useNavigate();
@@ -20,9 +20,17 @@ const CartScreen = () => {
 	const cart = useSelector(state => state.cart);
 	const { cartItems } = cart;
 
-    const addToCartHandler = async (product, qty) => {
-        dispatch(addToCart({...product, qty}));
-    };
+	const addToCartHandler = async (product, qty) => {
+		dispatch(addToCart({ ...product, qty }));
+	};
+
+	const removeFromCartHandler = async id => {
+		dispatch(removeFromCart(id));
+	};
+
+	const checkoutHandler = () => {
+		navigate('/login?redirect=/shipping');
+	};
 
 	return (
 		<Row>
@@ -48,7 +56,9 @@ const CartScreen = () => {
 										<Form.Control
 											as="select"
 											value={item.qty}
-											onChange={(e) => addToCartHandler(item, Number(e.target.value))}
+											onChange={e =>
+												addToCartHandler(item, Number(e.target.value))
+											}
 										>
 											{[...Array(item.countInStock).keys()].map(x => (
 												<option key={x + 1} value={x + 1}>
@@ -58,7 +68,11 @@ const CartScreen = () => {
 										</Form.Control>
 									</Col>
 									<Col md={2}>
-										<Button type="button" variant="light" onClick={() => {}}>
+										<Button
+											type="button"
+											variant="light"
+											onClick={() => removeFromCartHandler(item._id)}
+										>
 											<FaTrash />
 										</Button>
 									</Col>
@@ -73,24 +87,24 @@ const CartScreen = () => {
 					<ListGroup variant="flush">
 						<ListGroup.Item>
 							<h2>
-								Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)}
-								)items
+								Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)})
+								items
 							</h2>
 							$
 							{cartItems
 								.reduce((acc, item) => acc + item.qty * item.price, 0)
 								.toFixed(2)}
 						</ListGroup.Item>
-                        <ListGroup.Item>
-                            <Button
-                                type="button"
-                                className="btn-block"
-                                disabled={cartItems.length === 0}
-                                onClick={() => navigate('/login?redirect=shipping')}
-                            >
-                                Proceed To Checkout
-                            </Button>
-                        </ListGroup.Item>
+						<ListGroup.Item>
+							<Button
+								type="button"
+								className="btn-block"
+								disabled={cartItems.length === 0}
+								onClick={checkoutHandler}
+							>
+								Proceed To Checkout
+							</Button>
+						</ListGroup.Item>
 					</ListGroup>
 				</Card>
 			</Col>
